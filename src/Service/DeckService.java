@@ -2,13 +2,29 @@ package Service;
 
 import Domain.Cards;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DeckService {
 
-    public static int[][] getTheNthCard(int[][] cards,int index){
-//        TODO:this method is for extracting a card based on its index and the rest of card list
-        return null;
+    public static int[][][] getTheNthCard(int[][] cards,int index){
+        int[][][] newArray = new int[2][][];
+        int[][] extractedCard = new int[1][];
+
+        extractedCard[0] = cards[index];
+        int[][] restOfCards = new int[cards.length - 1][];
+
+        int i = 0;
+        for (int[] card : cards){
+            if( !Arrays.equals(card, cards[index])){
+                restOfCards[i] = card;
+                i++;
+            }
+        }
+
+        newArray[0] = extractedCard;
+        newArray[1] = restOfCards;
+        return newArray;
     }
 
     public static int[][] pullCard(int[][] cards){
