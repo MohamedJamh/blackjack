@@ -1,6 +1,5 @@
 package _primitiveClasses;
 
-import java.util.Arrays;
 
 public class ArrayFunctions {
     public static int[][] pushXInto2D(int length, int[][] arr , int[] x ){
@@ -10,7 +9,7 @@ public class ArrayFunctions {
         newArr[length][1] = x[1];
         return newArr;
 
-        // TODO: 22‏/9‏/2023 Add this logic to pushxinto2d test method
+        // TODO: 22‏/9‏/2023 Add this logic to pushXInto2D test method
 //    int[][] arr =
 //            {
 //                    {1, 2}, {2, 3}
