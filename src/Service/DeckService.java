@@ -2,6 +2,8 @@ package Service;
 
 import Domain.Cards;
 
+import java.util.Arrays;
+
 public class DeckService {
 
     public static int[][] getTheNthCard(int[][] cards,int index){
@@ -24,17 +26,14 @@ public class DeckService {
     }
 
     public static int[][][] drawTheNthCards(int[][] cards,int index){
+        int[][][] drawnCards = new int[2][][];
+        int[][] first_half = Arrays.copyOfRange(cards,0,index);
+        int[][] second_half = Arrays.copyOfRange(cards , index , cards.length);
 
-//        TODO:this method is for drawing cards to play with returns an 3 Dimension array
-//        int[][][] card =  {
-//                {
-//                    {1, 2}, {1, 2}
-//                },
-//                {
-//                    {3, 4}, {4, 5}
-//                }
-//        };
-        return null;
+        drawnCards[0] = first_half;
+        drawnCards[1] = second_half;
+
+        return drawnCards;
     }
 
     public static int[] drawOneCard(int[][] cards){
