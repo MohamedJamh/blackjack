@@ -1,3 +1,4 @@
+import Domain.Cards;
 import Service.DeckService;
 
 import java.util.Arrays;
@@ -7,9 +8,17 @@ public class Main {
 //        for (int[] card : CardsService.createCardsList(1, CardSymbol.DIAMOND)){
 //            System.out.println(Arrays.toString(card));
 //        }
-        int[][] arr = {
-                {1,2}, {34}, {56}, {78}, {910}, {1112}, {1314}, {1516}
+        int[][] palying = {
+            {1,2},{2,3}
         };
-        System.out.println(Arrays.deepToString(DeckService.pullCard(arr)));
+        int[][] remaining = {
+                {5,6},{7,8},{8,9}
+        };
+        Cards.setPlayingCards(palying);
+        Cards.setRemaining(remaining);
+        int[][] bank = {
+                {9,9},{9,9},{9,9},{9,9}
+        };
+        System.out.println(Arrays.deepToString(DeckService.discardCards(bank)));
     }
 }

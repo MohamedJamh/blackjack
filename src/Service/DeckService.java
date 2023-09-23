@@ -66,8 +66,16 @@ public class DeckService {
     public static void endRound(int[][] gamblerHandCards, int[][] dealerHandCards){
         // TODO: this method puts both dealers and gambler cards into the bank
     }
-    public static void discardCards(Cards cards,int[][] cardsBank){
-        // TODO: this method returns the cards to its initial state
+    public static int[][] discardCards(int[][] cardsBank){
+        int[][] playingCards = Cards.getPlayingCards();
+        int[][] remainingCards = Cards.getRemaining();
+        int[][] allCards = new int[playingCards.length + remainingCards.length + cardsBank.length][];
+
+        System.arraycopy(playingCards,0,allCards,0,playingCards.length);
+        System.arraycopy(remainingCards,0,allCards,playingCards.length ,remainingCards.length);
+        System.arraycopy(cardsBank,0,allCards,playingCards.length + remainingCards.length ,cardsBank.length);
+
+        return allCards;
     }
 
 }
