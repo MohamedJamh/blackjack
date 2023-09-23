@@ -28,17 +28,23 @@ public class DeckService {
     }
 
     public static int[][] pullCard(int[][] cards){
-//        TODO:this method is for generating a random number (n)
-//         where (0 <= n and n < cards length)
-//         this method uses getTheNthCard
-//         recursive logic here
-        return null;
+        int[][] shuffledCards = new int[cards.length][];
+        int[][][] cardAndRest;
+        int i = 0;
+        while (cards.length != 0){
+            int max = cards.length - 1;
+            int min = 0;
+            int randomIndex = (int) (Math.random() * ( max - min + 1)) + min;
+            cardAndRest = getTheNthCard(cards,randomIndex);
+            shuffledCards[i] = cardAndRest[0][0];
+            cards = cardAndRest[1];
+            i++;
+        };
+        return shuffledCards;
     }
 
     public static int[][] shiftCards(int[][] cards){
-//        TODO:this method is for shuffling cards
-//         this method uses pullCard
-        return null;
+        return pullCard(cards);
     }
 
     public static int[][][] drawTheNthCards(int[][] cards,int index){
