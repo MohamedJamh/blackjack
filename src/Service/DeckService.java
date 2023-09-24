@@ -5,7 +5,7 @@ import Domain.Cards;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DeckService {
+public class    DeckService {
 
     public static int[][][] getTheNthCard(int[][] cards,int index){
         int[][][] newArray = new int[2][][];
@@ -56,6 +56,15 @@ public class DeckService {
         drawnCards[1] = second_half;
 
         return drawnCards;
+    }
+
+    public static void drawPlayingCards(int[][] cards){
+        int max = cards.length;
+        int min = Math.round(  (float) Math.round( (float) (cards.length - 1) / 2 + cards.length - 1) / 2 );
+        int randomIndex = (int) (Math.random() * ( max - min + 1)) + min;
+        int[][][] drewCards = drawTheNthCards(cards,randomIndex);
+        Cards.setPlayingCards(drewCards[0]);
+        Cards.setRemaining(drewCards[1]);
     }
 
     public static int[] drawOneCard(int[][] cards){

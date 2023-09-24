@@ -6,6 +6,7 @@ public class Gambler extends Player {
     public static double getBudget() {
         return budget;
     }
+
     public static void setBudget(double budget) {
         Gambler.budget = Math.floor(budget);
     }
