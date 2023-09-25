@@ -18,8 +18,21 @@ public class CardsService {
         }
         return cards;
     }
-    public static int getCardsScore(int[][] cards){
-        // TODO: takes a hand of cards and calculates the total
-        return 0;
+    public static int getHandCardsScore(int[][] cards){
+        int score = 0;
+        int acesToEleven = 0;
+        for (int[] card : cards){
+            if(card[0] == 1){
+                if( score + 11 <= 21) {
+                    score += 11;
+                    acesToEleven++;
+                }
+                else score += 1;
+            }
+            else if(2 <= card[0] && card[0] <= 9) score += card[0];
+            else if(10 <= card[0] ) score += 10;
+            if (score > 21 && acesToEleven != 0) score -= 10;
+        }
+        return score;
     }
 }

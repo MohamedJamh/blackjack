@@ -69,12 +69,11 @@ public class DeckController {
                 }
             }catch (Exception ignored){}
         }while (true);
+        showCards();
     }
-
-    public static void spreadCards(){
-        for (int i = 1; i <= 4 ; i++) {
-
-        }
+    public static void showCards(){
+        System.out.println("Dealer --> " + Arrays.deepToString(deckDealer.getHandCards()));
+        System.out.println("You --> " + Arrays.deepToString(gambler.getHandCards()));
     }
     public static void endGame(){
         //TODO:This method end the blackjack game show remaining balance

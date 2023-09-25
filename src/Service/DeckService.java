@@ -1,5 +1,6 @@
 package Service;
 
+import Controller.DeckController;
 import Domain.Cards;
 
 import java.util.ArrayList;
@@ -73,6 +74,13 @@ public class    DeckService {
         System.arraycopy(playingCards, 1, remainPlayingCards, 0, playingCards.length - 1);
         Cards.setPlayingCards(remainPlayingCards);
         return drewCard;
+    }
+
+    public static void spreadCards(){
+        for (int i = 1; i <= 2 ; i++) {
+            DeckController.gambler.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
+            DeckController.deckDealer.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
+        }
     }
 
     public static void endRound(int[][] gamblerHandCards, int[][] dealerHandCards){
