@@ -67,9 +67,12 @@ public class    DeckService {
         Cards.setRemaining(drewCards[1]);
     }
 
-    public static int[] drawOneCard(int[][] cards){
-//        todo:this method gets one card in the top of remaining cards
-        return null;
+    public static int[] drawOneCard(int[][] playingCards){
+        int[] drewCard = playingCards[0];
+        int[][] remainPlayingCards = new int[ playingCards.length - 1][];
+        System.arraycopy(playingCards, 1, remainPlayingCards, 0, playingCards.length - 1);
+        Cards.setPlayingCards(remainPlayingCards);
+        return drewCard;
     }
 
     public static void endRound(int[][] gamblerHandCards, int[][] dealerHandCards){
