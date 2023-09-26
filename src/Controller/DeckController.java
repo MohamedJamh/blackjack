@@ -13,8 +13,7 @@ import java.util.Scanner;
 public class DeckController {
     public static Dealer deckDealer;
     public static Gambler gambler;
-    public static int[][] cardsBank;
-    public static Cards cards;
+    public static int[][] cardsBank = new int[0][];
 
     public static int[] bets = new int[]{1, 5, 25, 50, 100, 500,1000};
     private static final Scanner myScanner = new Scanner(System.in);
@@ -31,22 +30,28 @@ public class DeckController {
         startGame();
     }
     public static void startGame(){
+        gambler = new Gambler();
         int[][] cards = CardsService.createCardsList(1, CardSymbol.DIAMOND);
         cards = DeckService.shiftCards(cards);
         DeckService.drawPlayingCards(cards);
         do {
-            startRound();
+            if(Cards.getPlayingCards().length >= 4 ) startRound();
+            else{
+                System.out.println("Pioche Card Reached");
+                DeckService.discardCards(cardsBank);
+                break;
+            }
             if(Gambler.getBudget() < 5){
                 System.out.println("Sorry Out Of Budget");
                 break;
             }
             else{
-                System.out.println("Would you like another round :\n");
-                System.out.println("Y for yes :\n");
-                System.out.println("Press key for no :\n");
-                if(myScanner.nextLine().equalsIgnoreCase("Y")) startRound();
+                System.out.println("Would you like another round :");
+                System.out.println("Y for yes :");
+                System.out.println("Press key for no :");
             }
-        }while (true);
+            DeckService.endRound();
+        }while (myScanner.nextLine().equalsIgnoreCase("Y"));
     }
     public static void startRound(){
         System.out.printf("------------------ ROUND ------------------ budget: %f\n",Gambler.getBudget());
@@ -69,13 +74,66 @@ public class DeckController {
                 }
             }catch (Exception ignored){}
         }while (true);
-        showCards();
+        DeckService.spreadCards();
+        if(CardsService.getHandCardsScore(gambler.getHandCards()) == 21){
+            System.out.println("BLACKJACK");
+            Gambler.setBudget(Gambler.getBudget() + (Gambler.getBet() * 1.5));
+        }
+        else{
+            int gamblerScore ;
+            do {
+                gamblerScore = showCards(true);
+                if(gamblerScore > 21) {
+                    System.out.println("BUST");
+                    break;
+                }
+                System.out.println("1 - Hit | Press Key - Stay");
+                if(myScanner.nextLine().equalsIgnoreCase("1")){
+                    if(Cards.getPlayingCards().length != 0){
+                        gambler.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
+                        break;
+                    }
+                }else break;
+            } while (true);
+            revealWinner(gamblerScore);
+        }
+        Gambler.setBet(0);
+        System.out.println(" ------------------------- ");
     }
-    public static void showCards(){
-        System.out.println("Dealer --> " + Arrays.deepToString(deckDealer.getHandCards()));
-        System.out.println("You --> " + Arrays.deepToString(gambler.getHandCards()));
+    public static void revealWinner(int gamblerScore){
+        if(gamblerScore < 21){
+            showCards(false);
+            while (CardsService.getHandCardsScore(deckDealer.getHandCards()) < 17){
+                if(Cards.getPlayingCards().length != 0){
+                    deckDealer.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
+                    System.out.println(" -- Dealers hits a card -- ");
+                    break;
+                }
+            }
+            showCards(false);
+            int dealerScore = CardsService.getHandCardsScore(deckDealer.getHandCards());
+            if( dealerScore > 21 || dealerScore < gamblerScore ){
+                if(dealerScore > 21 ) System.out.println("Dealer BUST");
+                System.out.println("You Win");
+                Gambler.setBudget(Gambler.getBudget() + (Gambler.getBet() * 2));
+            }else if (gamblerScore < dealerScore){
+                System.out.println("Dealer Wins");
+            }else{
+                System.out.println("PUSH PUSH");
+                Gambler.setBudget(Gambler.getBudget() + Gambler.getBet());
+            }
+            Gambler.setBet(0);
+        }
     }
-    public static void endGame(){
-        //TODO:This method end the blackjack game show remaining balance
+    public static int showCards(boolean hideDealersCard){
+        System.out.println("------------------ CARDS ------------------ \n");
+        int[][] gamblerHandCards = gambler.getHandCards();
+        int gamblerHandCardsScore = CardsService.getHandCardsScore(gamblerHandCards);
+        String dealersCards = "Dealer --> ";
+        if(hideDealersCard) dealersCards += "[X,X], " + Arrays.toString(deckDealer.getHandCards()[0]);
+        else dealersCards += Arrays.deepToString(deckDealer.getHandCards()) + " - Dealers total " + CardsService.getHandCardsScore(deckDealer.getHandCards());
+        System.out.println(dealersCards);
+        System.out.println("You --> " + Arrays.deepToString(gamblerHandCards) + " - You total : " + gamblerHandCardsScore );
+        return gamblerHandCardsScore;
     }
 }

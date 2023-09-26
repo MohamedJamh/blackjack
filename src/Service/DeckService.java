@@ -2,8 +2,6 @@ package Service;
 
 import Controller.DeckController;
 import Domain.Cards;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class    DeckService {
@@ -40,7 +38,7 @@ public class    DeckService {
             shuffledCards[i] = cardAndRest[0][0];
             cards = cardAndRest[1];
             i++;
-        };
+        }
         return shuffledCards;
     }
 
@@ -83,8 +81,10 @@ public class    DeckService {
         }
     }
 
-    public static void endRound(int[][] gamblerHandCards, int[][] dealerHandCards){
-        // TODO: this method puts both dealers and gambler cards into the bank
+    public static void endRound(){
+        storeInBank(DeckController.deckDealer.getHandCards(),DeckController.gambler.getHandCards());
+        DeckController.gambler.emptyHands();
+        DeckController.deckDealer.emptyHands();
     }
     public static int[][] discardCards(int[][] cardsBank){
         int[][] playingCards = Cards.getPlayingCards();
@@ -96,6 +96,14 @@ public class    DeckService {
         System.arraycopy(cardsBank,0,allCards,playingCards.length + remainingCards.length ,cardsBank.length);
 
         return allCards;
+    }
+    public static void storeInBank(int[][] dealersCard , int[][] gamblersCard ){
+        int[][] cardsBank = DeckController.cardsBank;
+        int[][] newArr = new int[cardsBank.length + dealersCard.length + gamblersCard.length][];
+        System.arraycopy(cardsBank,0,newArr,0,cardsBank.length);
+        System.arraycopy(dealersCard,0,newArr,cardsBank.length,dealersCard.length);
+        System.arraycopy(gamblersCard,0,newArr,cardsBank.length + dealersCard.length,gamblersCard.length);
+        DeckController.cardsBank = newArr;
     }
 
 }

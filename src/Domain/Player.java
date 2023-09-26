@@ -15,4 +15,7 @@ public class Player {
         newHandCards[handCards.length] = card;
         handCards = newHandCards;
     }
+    public  void emptyHands(){
+        handCards = new int[0][];
+    }
 }
