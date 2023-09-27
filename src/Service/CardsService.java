@@ -31,7 +31,10 @@ public class CardsService {
             }
             else if(2 <= card[0] && card[0] <= 9) score += card[0];
             else if(10 <= card[0] ) score += 10;
-            if (score > 21 && acesToEleven != 0) score -= 10;
+            if (score > 21 && acesToEleven != 0){
+                score -= 10;
+                acesToEleven--;
+            }
         }
         return score;
     }

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class Player {
     protected int[][] handCards = new int[0][];
+    protected int score;
 
     public int[][] getHandCards() {
         return handCards;
@@ -17,5 +18,13 @@ public class Player {
     }
     public  void emptyHands(){
         handCards = new int[0][];
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

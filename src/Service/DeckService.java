@@ -66,18 +66,18 @@ public class    DeckService {
         Cards.setRemaining(drewCards[1]);
     }
 
-    public static int[] drawOneCard(int[][] playingCards){
-        int[] drewCard = playingCards[0];
-        int[][] remainPlayingCards = new int[ playingCards.length - 1][];
-        System.arraycopy(playingCards, 1, remainPlayingCards, 0, playingCards.length - 1);
+    public static int[] drawOneCard(){
+        int[] drewCard = Cards.getPlayingCards()[0];
+        int[][] remainPlayingCards = new int[ Cards.getPlayingCards().length - 1][];
+        System.arraycopy(Cards.getPlayingCards(), 1, remainPlayingCards, 0, Cards.getPlayingCards().length - 1);
         Cards.setPlayingCards(remainPlayingCards);
         return drewCard;
     }
 
     public static void spreadCards(){
         for (int i = 1; i <= 2 ; i++) {
-            DeckController.gambler.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
-            DeckController.deckDealer.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
+            DeckController.gambler.hit(DeckService.drawOneCard());
+            DeckController.deckDealer.hit(DeckService.drawOneCard());
         }
     }
 

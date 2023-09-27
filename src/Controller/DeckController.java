@@ -75,27 +75,28 @@ public class DeckController {
             }catch (Exception ignored){}
         }while (true);
         DeckService.spreadCards();
-        if(CardsService.getHandCardsScore(gambler.getHandCards()) == 21){
+        gambler.setScore(CardsService.getHandCardsScore(gambler.getHandCards()));
+        deckDealer.setScore(CardsService.getHandCardsScore(deckDealer.getHandCards()));
+        if(gambler.getScore() == 21){
             System.out.println("BLACKJACK");
             Gambler.setBudget(Gambler.getBudget() + (Gambler.getBet() * 1.5));
         }
         else{
-            int gamblerScore ;
             do {
-                gamblerScore = showCards(true);
-                if(gamblerScore > 21) {
+                showCards(true);
+                if(gambler.getScore() > 21) {
                     System.out.println("BUST");
                     break;
                 }
                 System.out.println("1 - Hit | Press Key - Stay");
                 if(myScanner.nextLine().equalsIgnoreCase("1")){
                     if(Cards.getPlayingCards().length != 0){
-                        gambler.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
-                        break;
+                        gambler.hit(DeckService.drawOneCard());
+                        gambler.setScore(CardsService.getHandCardsScore(gambler.getHandCards()));
                     }
                 }else break;
             } while (true);
-            revealWinner(gamblerScore);
+            revealWinner(gambler.getScore());
         }
         Gambler.setBet(0);
         System.out.println(" ------------------------- ");
@@ -103,15 +104,14 @@ public class DeckController {
     public static void revealWinner(int gamblerScore){
         if(gamblerScore < 21){
             showCards(false);
-            while (CardsService.getHandCardsScore(deckDealer.getHandCards()) < 17){
-                if(Cards.getPlayingCards().length != 0){
-                    deckDealer.hit(DeckService.drawOneCard(Cards.getPlayingCards()));
-                    System.out.println(" -- Dealers hits a card -- ");
-                    break;
-                }
+            while (deckDealer.getScore() < 17){
+                if(Cards.getPlayingCards().length == 0) break;
+                deckDealer.hit(DeckService.drawOneCard());
+                deckDealer.setScore(CardsService.getHandCardsScore(deckDealer.getHandCards()));
+                System.out.println(" -- Dealers hits a card -- ");
             }
+            int dealerScore = deckDealer.getScore();
             showCards(false);
-            int dealerScore = CardsService.getHandCardsScore(deckDealer.getHandCards());
             if( dealerScore > 21 || dealerScore < gamblerScore ){
                 if(dealerScore > 21 ) System.out.println("Dealer BUST");
                 System.out.println("You Win");
@@ -125,15 +125,13 @@ public class DeckController {
             Gambler.setBet(0);
         }
     }
-    public static int showCards(boolean hideDealersCard){
+    public static void showCards(boolean hideDealersCard){
         System.out.println("------------------ CARDS ------------------ \n");
         int[][] gamblerHandCards = gambler.getHandCards();
-        int gamblerHandCardsScore = CardsService.getHandCardsScore(gamblerHandCards);
         String dealersCards = "Dealer --> ";
         if(hideDealersCard) dealersCards += "[X,X], " + Arrays.toString(deckDealer.getHandCards()[0]);
-        else dealersCards += Arrays.deepToString(deckDealer.getHandCards()) + " - Dealers total " + CardsService.getHandCardsScore(deckDealer.getHandCards());
+        else dealersCards += Arrays.deepToString(deckDealer.getHandCards()) + " - Dealers total " + deckDealer.getScore();
         System.out.println(dealersCards);
-        System.out.println("You --> " + Arrays.deepToString(gamblerHandCards) + " - You total : " + gamblerHandCardsScore );
-        return gamblerHandCardsScore;
+        System.out.println("You --> " + Arrays.deepToString(gamblerHandCards) + " - You total : " + gambler.getScore() );
     }
 }
