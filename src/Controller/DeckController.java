@@ -18,30 +18,45 @@ public class DeckController {
     public static int[] bets = new int[]{1, 5, 25, 50, 100, 500,1000};
     private static final Scanner myScanner = new Scanner(System.in);
 
+    public static void init(){
+        int[][] cards = CardsService.createCardsList(1, CardSymbol.DIAMOND);
+        cards = DeckService.shiftCards(cards);
+        DeckService.drawPlayingCards(cards);
+        DeckController.deckDealer = new Dealer();
+        DeckController.gambler = new Gambler();
+    }
+
     public static void opening() {
         System.out.println("------------------ BLACKJACK GAME ------------------");
         do {
             System.out.println("Please Enter Your Budget (Minimum 100 Dollars) :");
             try {
                 Gambler.setBudget(Double.parseDouble(myScanner.nextLine()));
-            }catch (Exception ignored){
-            }
+            }catch (Exception ignored){}
         }while (Gambler.getBudget() < 100);
-        startGame();
+        do {
+            startGame();
+            System.out.println("START AGAIN : type y | QUIT : press key");
+            String choice = myScanner.nextLine();
+            if(choice.equalsIgnoreCase("Y")){
+                if(Gambler.getBudget() <= 0){
+                    DeckService.drawPlayingCards(DeckService.shiftCards(Cards.getPlayingCards()));
+                    gambler.emptyHands();
+                    deckDealer.emptyHands();
+                    opening();
+                }
+            }else break;
+        }while (true);
     }
     public static void startGame(){
-        gambler = new Gambler();
-        int[][] cards = CardsService.createCardsList(1, CardSymbol.DIAMOND);
-        cards = DeckService.shiftCards(cards);
-        DeckService.drawPlayingCards(cards);
         do {
             if(Cards.getPlayingCards().length >= 4 ) startRound();
             else{
                 System.out.println("Pioche Card Reached");
-                DeckService.discardCards(cardsBank);
+                Cards.setPlayingCards(DeckService.discardCards(cardsBank));
                 break;
             }
-            if(Gambler.getBudget() < 5){
+            if(Gambler.getBudget() < 1){
                 System.out.println("Sorry Out Of Budget");
                 break;
             }
@@ -102,7 +117,7 @@ public class DeckController {
         System.out.println(" ------------------------- ");
     }
     public static void revealWinner(int gamblerScore){
-        if(gamblerScore < 21){
+        if(gamblerScore <= 21){
             showCards(false);
             while (deckDealer.getScore() < 17){
                 if(Cards.getPlayingCards().length == 0) break;
